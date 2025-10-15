@@ -38,7 +38,7 @@
 
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="example2">
                         <label for="validationServer02" class="form-label">Last name</label>
                         <input type="text" class="form-control is-valid" id="validationServer02" value="Otto" required>
                         <div class="valid-feedback">
@@ -96,7 +96,11 @@
                             Please select a valid state.
                         </div>
                     </div>
-                    <div class="col-md-3">
+
+
+
+
+                    <div class="col-md-3" id="example3">
                         <label for="validationServer05" class="form-label">Zip</label>
                         <input type="text" class="form-control is-invalid" id="validationServer05"
                             aria-describedby="validationServer05Feedback" required>
@@ -104,6 +108,10 @@
                             Please provide a valid zip.
                         </div>
                     </div>
+
+
+
+
                     <div class="col-12">
                         <div class="form-check">
                             <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3"
@@ -130,6 +138,14 @@
         crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
+
+            // selectores
+            $("*").css("font-family", "Times New Roman, Times, serif");
+            $(".form-label").css("color", "blue");
+            $("h1").css("border-bottom", "2px solid blue");
+            $("#example2 >").css("background-color", "lightgray");
+            $("#example3 > .invalid-feedback").css("color", "yellow");
+            
 
             $("#validationInputFirstNameValidFeedback").hide();
             $("#validationInputFirstNameInvalidFeedback").hide();
