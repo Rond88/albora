@@ -1,54 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-        integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <title>Ejemplos de Proyecto Albora</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 1.5em;
+        }
+
+        .desc {
+            color: #555;
+            margin-left: 1em;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Hello, World!</h1>
-    <h2 id="description">This is a simple HTML document.</h2>
-    <button id="myButton">Click Me to Change Color</button>
-    <form id="myForm">
-        <input type="text" id="nombre" name="query" placeholder="Enter your name"><br>
-        Longitud: <p id="longitud">0</p>
-        <input type="submit" value="Submit">
-    </form>
-    <script>
-        function saludar(event) {
-            var name = $("#nombre").val();
-            alert("Hello, " + name + "!");
-            event.preventDefault(); // return false;
-        }
-        function cambiarColor() {
-            $("#description").css("color", "blue");
-            $("#description").text("The color has been changed!");
-        }
-        function attachEvents() {
-            $("#myButton").click(cambiarColor);
-            $("#myForm").submit(saludar);
-            $("#nombre").on("input", function () {
-                var contenido = $("#nombre").val();
-                $("#longitud").text(contenido.length);
-            });
+    <h1>Ejemplos del proyecto Albora</h1>
+    <ul>
+        <li>
+            <a href="indexjquery.html">indexjquery.html</a>
+            <div class="desc">
+                Ejemplo de uso básico de jQuery: cambia el color de un texto, muestra la longitud de un input en tiempo
+                real y saluda al enviar el formulario.
+            </div>
+        </li>
+        <li>
+            <a href="indexform.html">indexform.html</a>
+            <div class="desc">
+                Formulario HTML con validación y manejo de eventos.
+            </div>
+        </li>
+        <li>
+            <a href="indexrecursivo.html">indexrecursivo.html</a>
+            <div class="desc">
+                Ejemplo de función recursiva en JavaScript.
+            </div>
+        </li>
+        <li>
+            <a href="closures.html">closures.html</a>
+            <div class="desc">
+                Ejemplo básico de closures en JavaScript.
+            </div>
+        </li>
+        <li>
+            <a href="closures2.html">closures2.html</a>
+            <div class="desc">
+                Ejemplo avanzado de closures con funciones que recuerdan su contexto.
+            </div>
+        </li>
+        <li>
+            <a href="oo.html">oo.html</a>
+            <div class="desc">
+                Ejemplo de programación orientada a objetos en JavaScript.
+            </div>
+        </li>
 
-        }
-        function mifuncion() {
-            console.log("jQuery version:", $.fn.jquery);
-            attachEvents();
-        }
-        function miprograma() {
-            return function () {
-                console.log("jQuery is working!");
-                mifuncion();
-            };
-        }
-        $(document).ready(miprograma());
-    </script>
+        <li>
+            <a href="llamadaajax.html">llamadaajax.html</a>
+            <div class="desc">
+                Ejemplo de doble llamada AJAX para obtener datos de un servidor.
+            </div>
+        </li>
+
+        <li>
+            <a href="callback1.html">callback1.html</a>
+            <div class="desc">
+                Ejemplo de llamada a función callback simple.
+            </div>
+        </li>
+        <li>
+            <a href="callbackhell.html">callbackhell.html</a>
+            <div class="desc">
+                Demostración de callback hell con múltiples funciones anidadas.
+            </div>
+        </li>
+        <li>
+            <a href="callbackhellordered.html">callbackhellordered.html</a>
+            <div class="desc">
+                Ejemplo de callbacks anidados pero ordenados con promesas.
+            </div>
+        </li>
+
+
+    </ul>
 </body>
 
 </html>

@@ -1,0 +1,9 @@
+- callback1.html: Ejemplo de llamada a función callback simple.
+- callbackhell.html: Demostración de callback hell con múltiples funciones anidadas.
+- callbackhellordered.html: Ejemplo de callbacks anidados pero ordenados para mayor claridad.
+- closures.html: Ejemplo básico de closures en JavaScript.
+- closures2.html: Ejemplo avanzado de closures con funciones que recuerdan su contexto.
+- indexform.html: Formulario HTML con validación y manejo de eventos.
+- indexrecursivo.html: Ejemplo de función recursiva en JavaScript.
+- llamadaajax.html: Ejemplo de llamada AJAX para obtener datos de un servidor.
+- oo.html: Ejemplo de programación orientada a objetos en JavaScript.

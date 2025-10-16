@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJAX ordenado con jQuery</title>
+</head>
+
+<body>
+  <h1>Llamada AJAX a una API con jQuery ordenada por usuario mediante promesas</h1>
+  <div id="output"></div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function callbackError(mensaje) {
+      console.error("Ocurrió un error:", mensaje);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/users",
+        method: "GET",
+        dataType: "json",
+        success: function (users) {
+          // Ordenamos los usuarios por id
+          users.sort((a, b) => a.id - b.id);
+
+          // Creamos un array de Promesas para obtener los posts de cada usuario
+          const promises = users.map(user => {
+            return $.ajax({
+              url: `https://jsonplaceholder.typicode.com/users/${user.id}/posts`,
+              method: "GET",
+              dataType: "json"
+            }).then(posts => ({
+              user,
+              posts
+            })).catch(err => {
+              callbackError(`Error al obtener posts del usuario ${user.id}: ${err.statusText}`);
+              return null;
+            });
+          });
+
+          // Esperamos a recibir todas las peticiones 
+          Promise.all(promises).then(results => {
+            // Filtramos los resultados válidos
+            const validResults = results.filter(r => r !== null);
+
+            // Construimos la salida HTML de forma ordenada
+            let html = "";
+            validResults.forEach(result => {
+              html += `<br><b>USUARIO: ${result.user.id} - ${result.user.name} - ${result.user.email}</b><br>`;
+              html += "<ol>";
+              result.posts.forEach(post => {
+                html += `<li><b>${post.title}</b></li>`;
+                html += `${post.body}<br>`;
+              });
+              html += "</ol><br>";
+            });
+
+            document.getElementById("output").innerHTML = html;
+            console.log("Todos los datos procesados correctamente.");
+          });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          const mensaje = `Error: ${textStatus} — ${errorThrown}`;
+          callbackError(mensaje);
+        }
+      });
+
+      console.log("Petición AJAX enviada... Yo acabo.");
+    });
+  </script>
+</body>
+
+</html>
