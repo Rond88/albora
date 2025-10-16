@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cierre (Closures) en JavaScript</h1>
+    <!--- dos botones de contador -->
+    <button id="btnContar1">Contador 1</button>
+    <button id="btnContar2">Contador 2</button>
+    <button id="btnContar3">Contador 3</button>
+    <pre id="output"></pre>
+    <script>
+
+        function vehiculo(nombre){
+            return {
+                getNombre: function() {
+                    return nombre;
+                },
+                setNombre: function(nuevoNombre) {
+                    nombre = nuevoNombre;
+                }
+            }
+        }
+        function coche(nombre, marca){
+            const v = vehiculo(nombre);
+            return {
+                getNombre: v.getNombre,
+                setNombre: v.setNombre,
+                getMarca: function() {
+                    return marca;
+                },
+                setMarca: function(nuevaMarca) {
+                    marca = nuevaMarca;
+                }
+            }
+        }
+
+        // que se ejecuta cuando el DOM está listo
+        document.addEventListener("DOMContentLoaded", function() {
+            const miCoche = coche("Mi Coche", "Toyota");
+            document.getElementById("output").innerText += "Nombre: " + miCoche.getNombre() + "\n";
+            document.getElementById("output").innerText += "Marca: " + miCoche.getMarca() + "\n";
+            miCoche.setNombre("Mi Nuevo Coche");
+            miCoche.setMarca("Honda");
+            document.getElementById("output").innerText += "Nombre actualizado: " + miCoche.getNombre() + "\n";
+            document.getElementById("output").innerText += "Marca actualizada: " + miCoche.getMarca() + "\n";
+        }); 
+
+
+    </script>
+</body>
+</html>

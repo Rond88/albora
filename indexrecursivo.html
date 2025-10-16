@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Recursividad</h1>
+    <pre id="output"></pre>
+    <script>
+        function contarRegresivo(numero) {
+            if (numero <= 0) {
+                document.getElementById("output").innerText += "¡Despegue!\n";
+            } else {
+                document.getElementById("output").innerText += numero + "\n";
+                contarRegresivo(numero - 1);  // llamada recursiva
+                document.getElementById("output").innerText += numero + "\n";
+            }
+        }
+        // factorial recursivo
+        function factorial(n) {
+            if (n === 0 || n === 1) {
+                return 1;
+            } else {
+                return n * factorial(n - 1);
+            }   
+        }
+        // ordenar un array recursivamente (merge sort)
+        function merge(left, right) {
+            let result = [];
+            let i = 0;
+            let j = 0;
+            while (i < left.length && j < right.length) {
+                if (left[i] < right[j]) {
+                    result.push(left[i]);
+                    i++;
+                } else {
+                    result.push(right[j]);
+                    j++;
+                }
+            }
+            return result.concat(left.slice(i)).concat(right.slice(j));
+        }
+        function mergeSort(arr) {
+            if (arr.length <= 1) {
+                return arr;
+            }
+            const mid = Math.floor(arr.length / 2);
+            const left = arr.slice(0, mid);
+            const right = arr.slice(mid);
+            return merge(mergeSort(left), mergeSort(right));
+        }
+        // document ready
+        document.addEventListener("DOMContentLoaded", function () {
+            contarRegresivo(15);
+            document.getElementById("output").innerText += "Factorial de 5: " + factorial(5) + "\n";
+            document.getElementById("output").innerText += "Factorial de 10: " + factorial(10) + "\n";
+            const array = [38, 27, 43, 3, 9, 82, 10];
+            document.getElementById("output").innerText += "Array original: " + array + "\n";
+            const sortedArray = mergeSort(array);   
+            document.getElementById("output").innerText += "Array ordenado: " + sortedArray + "\n";
+        });
+    </script>
+</body>
+
+</html>

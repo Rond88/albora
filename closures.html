@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cierre (Closures) en JavaScript</h1>
+    <!--- dos botones de contador -->
+    <button id="btnContar1">Contador 1</button>
+    <button id="btnContar2">Contador 2</button>
+    <button id="btnContar3">Contador 3</button>
+    <pre id="output"></pre>
+    <script>
+        function crearContador() {
+            let contador = 0;
+            return function() {
+                contador++;
+                return contador;
+            };
+        }
+
+        // que se ejecuta cuando el DOM está listo
+        document.addEventListener("DOMContentLoaded", function() {
+            const contador1 = crearContador();
+            const contador2 = crearContador();  
+            const contador3 = crearContador(); // un tercer contador independiente
+            document.getElementById("btnContar1").addEventListener("click", function() {
+                const valor = contador1();
+                document.getElementById("output").innerText += "Contador 1: " + valor + "\n";
+            });
+            document.getElementById("btnContar2").addEventListener("click", function() {
+                const valor = contador2();
+                document.getElementById("output").innerText += "Contador 2: " + valor + "\n";
+            });
+            document.getElementById("btnContar3").addEventListener("click", function() {
+                const valor = contador3();
+                document.getElementById("output").innerText += "Contador 3: " + valor + "\n";
+            });
+        });
+    </script>
+</body>
+</html>
