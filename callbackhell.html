@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Llamada AJAX con jQuery</h1>
+    <div id="output"></div>
+    <script>
+
+
+
+        function callbackError(mensaje) {
+            console.error("Ocurrió un error:", mensaje);
+        }
+
+
+        // espera a que el DOM esté listo
+        document.addEventListener("DOMContentLoaded", function () {
+
+            $.ajax({
+                url: "https://jsonplaceholder.typicode.com/users",
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    // Si la petición es exitosa, se llama al callback de éxito
+                    console.log("Datos recibidos:", data);
+                    // construir una tabla HTML con los datos recibidos
+                    let tabla = "";
+                    data.forEach(usuario => {
+
+
+
+                        (function (tabla, usuarioid) {
+                            $.ajax({
+                                url: "https://jsonplaceholder.typicode.com/user/" + usuarioid + "/posts",
+                                method: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    // Si la petición es exitosa, se llama al callback de éxito
+                                    console.log("Datos recibidos:", data);
+                                    // construir una tabla HTML con los datos recibidos
+                                    tabla += "<br><br>";
+                                    tabla += `<b>USUARIO: ${usuario.id} - ${usuario.name} - ${usuario.email}</b><br>`;
+                                    
+                                    tabla += "<ol>";
+                                    data.forEach(post => {                                        
+                                        tabla += `<li><b>${post.title}</b></li>`;
+                                        tabla += ` ${post.body} <br>`;
+                                    });
+                                    tabla += "</ol><br>";
+
+
+                                    // aqui si que estan los datos   
+                                    console.log("Datos procesados y tabla construida.", data);
+                                    document.getElementById("output").innerHTML += tabla;
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    // En caso de error, llamamos al callback de error
+                                    const mensaje = `Error: ${textStatus} — ${errorThrown}`;
+                                    callbackError(mensaje);
+                                }
+                            });                            
+                        })(tabla, usuario.id);
+
+
+
+
+
+
+
+
+                    });
+                    tabla += "</table>";
+                    
+                    // aqui si que estan los datos   
+                    console.log("Datos procesados y tabla construida.", data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // En caso de error, llamamos al callback de error
+                    const mensaje = `Error: ${textStatus} — ${errorThrown}`;
+                    callbackError(mensaje);
+                }
+            });
+
+
+
+            // ERROR 1: aqui no tienes los datos y por lo tanto no puedes usarlos y por lo tanto no puedes construir la tabla
+            console.log("Petición AJAX enviada... Yo acabo.");
+
+
+
+
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+
+</html>
