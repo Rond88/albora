@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJAX ordenado solo ES6</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    #output { margin-top: 2em; }
+    ol { margin-bottom: 2em; }
+  </style>
+</head>
+<body>
+  <h1>Llamada AJAX a una API ordenada por usuario utilizando promesas en ES6</h1>
+  <div id="output"></div>
+  <script>
+    function callbackError(mensaje) {
+      console.error("Ocurrió un error:", mensaje);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("https://jsonplaceholder.typicode.com/users")
+        .then(response => {
+          if (!response.ok) throw new Error(response.statusText);
+          return response.json();
+        })
+        .then(users => {
+          users.sort((a, b) => a.id - b.id);
+          // Array de promesas para los posts de cada usuario
+          const promises = users.map(user =>
+            fetch(`https://jsonplaceholder.typicode.com/users/${user.id}/posts`)
+              .then(resp => {
+                if (!resp.ok) throw new Error(resp.statusText);
+                return resp.json();
+              })
+              .then(posts => ({ user, posts }))
+              .catch(err => {
+                callbackError(`Error al obtener posts del usuario ${user.id}: ${err.message}`);
+                return null;
+              })
+          );
+          return Promise.all(promises);
+        })
+        .then(results => {
+          const validResults = results.filter(r => r !== null);
+          let html = "";
+          validResults.forEach(result => {
+            html += `<br><b>USUARIO: ${result.user.id} - ${result.user.name} - ${result.user.email}</b><br>`;
+            html += "<ol>";
+            result.posts.forEach(post => {
+              html += `<li><b>${post.title}</b></li>`;
+              html += `${post.body}<br>`;
+            });
+            html += "</ol><br>";
+          });
+          document.getElementById("output").innerHTML = html;
+          console.log("Todos los datos procesados correctamente.");
+        })
+        .catch(err => {
+          callbackError(`Error general: ${err.message}`);
+        });
+      console.log("Petición AJAX enviada... Yo acabo.");
+    });
+  </script>
+</body>
+</html>
