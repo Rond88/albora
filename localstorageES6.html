@@ -1,88 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>LocalStorage ES6 - Ejemplo</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    label, input, button { font-size: 1rem; }
-    input { padding: 0.4rem; width: 300px; }
-    button { margin-left: 0.5rem; padding: 0.4rem 0.8rem; }
-    #list { margin-top: 1em; }
-    .item { padding: 0.4rem 0; border-bottom: 1px solid #eee; }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>LocalStorage ES6 - Ejemplo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+        }
+
+        label,
+        input,
+        button {
+            font-size: 1rem;
+        }
+
+        input {
+            padding: 0.4rem;
+            width: 300px;
+        }
+
+        button {
+            margin-left: 0.5rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        #list {
+            margin-top: 1em;
+        }
+
+        .item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Ejemplo LocalStorage (ES6)</h1>
-  <div>
-    <label for="txt">Introduce texto:</label>
-    <input id="txt" type="text" placeholder="Escribe algo...">
-    <button id="persist">Persistir</button>
-    <button id="reset">Reset</button>
-  </div>
+    <h1>Ejemplo LocalStorage (ES6)</h1>
+    <div>
+        <label for="txt">Introduce texto:</label>
+        <input id="txt" type="text" placeholder="Escribe algo...">
+        <button id="persist">Persistir</button>
+        <button id="reset">Reset</button>
+    </div>
 
-  <div id="list">Cargando...</div>
+    <div id="list">Cargando...</div>
 
-  <script>
-    // Uso exclusivo ES6 (let/const, arrow functions, template literals, fetch no usado aquí)
-    const KEY = 'localstorage_example_items_v1';
+    <script>
+        // Uso exclusivo ES6 (let/const, arrow functions, template literals, fetch no usado aquí)
+        const KEY = 'localstorage_example_items_v1';
 
-    const $ = id => document.getElementById(id);
-    const listEl = $('list');
-    const inputEl = $('txt');
-    const persistBtn = $('persist');
-    const resetBtn = $('reset');
+        const $ = id => document.getElementById(id);
+        const listEl = $('list');
+        const inputEl = $('txt');
+        const persistBtn = $('persist');
+        const resetBtn = $('reset');
 
-    const read = () => {
-      const raw = localStorage.getItem(KEY);
-      try {
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        console.error('JSON parse error', e);
-        return [];
-      }
-    };
+        const read = () => {
+            const raw = localStorage.getItem(KEY);
+            try {
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                console.error('JSON parse error', e);
+                return [];
+            }
+        };
 
-    const write = items => {
-      localStorage.setItem(KEY, JSON.stringify(items));
-    };
+        const write = items => {
+            localStorage.setItem(KEY, JSON.stringify(items));
+        };
 
-    const render = () => {
-      const items = read();
-      if (!items.length) {
-        listEl.innerHTML = '<em>No hay datos guardados.</em>';
-        return;
-      }
-      listEl.innerHTML = items.map(i => `<div class="item">${escapeHtml(i)}</div>`).join('');
-    };
+        const render = () => {
+            const items = read();
+            if (!items.length) {
+                listEl.innerHTML = '<em>No hay datos guardados.</em>';
+                return;
+            }
+            listEl.innerHTML = items.map(i => `<div class="item">${escapeHtml(i)}</div>`).join('');
+        };
 
-    const escapeHtml = str => String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+        const escapeHtml = str => String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
 
-    persistBtn.addEventListener('click', () => {
-      const val = inputEl.value.trim();
-      if (!val) return;
-      const items = read();
-      items.push(val);
-      write(items);
-      inputEl.value = '';
-      render();
-    });
+        persistBtn.addEventListener('click', () => {
+            const val = inputEl.value.trim();
+            if (!val) return;
+            const items = read();
+            items.push(val);
+            write(items);
+            inputEl.value = '';
+            render();
+        });
 
-    resetBtn.addEventListener('click', () => {
-      localStorage.removeItem(KEY);
-      render();
-    });
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem(KEY);
+            render();
+        });
 
-    // Render inicial
-    document.addEventListener('DOMContentLoaded', () => {
-      render();
-    });
-  </script>
+        // Render inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+        });
+    </script>
 </body>
+
 </html>
