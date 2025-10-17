@@ -119,8 +119,7 @@
                                     html += '<div class="comments"><strong>Comentarios:</strong>';
                                     post.comments.forEach(function (c) {
                                         html += '<div class="comment">';
-                                        html += '<div class="meta"><b>Comentario #' + c.id + ' - ' + escapeHtml(c.name) + '</b> &lt;' + escapeHtml(c.email) + '&gt;</div>';
-                                        html += '<div>ID comentario: ' + c.id + '</div>';
+                                        html += '<div class="meta"><b>Comentario #' + c.id + ' - ' + escapeHtml(c.name) + '</b> &lt;' + escapeHtml(c.email) + '&gt;</div>';                                        
                                         html += '<div>' + escapeHtml(c.body) + '</div>';
                                         html += '</div>';
                                     });

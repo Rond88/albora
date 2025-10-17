@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Async/Await Funcional - Usuarios, Posts y Comentarios</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    #output { margin-top: 1em; }
+    .user { margin-bottom: 2em; }
+    .post { margin: 1em 0 1em 1em; color: blue; }
+    .postBody{ margin: 1em 2em; color: #5e0000; }
+    .comments { margin-left: 2em; font-size: 0.95em; color: #333; }
+    .comment { margin-bottom: 0.5em; padding: 0.4em; border-left: 3px solid #ccc; }
+    .meta { color: #666; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Usuarios → Posts → Comentarios (async/await - estilo funcional)</h1>
+  <div id="output">Cargando datos...</div>
+
+  <script>
+    // Helpers
+    const callbackError = mensaje => console.error('Ocurrió un error:', mensaje);
+    const escapeHtml = s => typeof s !== 'string' ? String(s) : String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+    // Renderers funcionales (no bucles)
+    const renderComment = c => [
+      '<div class="comment">',
+      '<div class="meta"><b>Comentario #' + c.id + ' - ' + escapeHtml(c.name) + '</b> &lt;' + escapeHtml(c.email) + '&gt;</div>',      
+      '<div>' + escapeHtml(c.body) + '</div>',
+      '</div>'
+    ].join('');
+
+    const renderPost = post => {
+      const commentsHtml = (!post.comments || post.comments.length === 0)
+        ? '<div class="comments">(Sin comentarios)</div>'
+        : '<div class="comments"><strong>Comentarios:</strong>' + post.comments.map(renderComment).join('') + '</div>';
+
+      return ['<div class="post">',
+        '<h3>Post #' + post.id + ': ' + escapeHtml(post.title) + '</h3>',        
+        '<div class="postBody">' + escapeHtml(post.body) + '</div>',
+        commentsHtml,
+        '</div>'
+      ].join('');
+    };
+
+    const renderUser = result => {
+      const header = '<h2>USUARIO: ' + result.user.id + ' - ' + escapeHtml(result.user.name) + ' - <span class="meta">' + escapeHtml(result.user.email) + '</span></h2>';
+      const postsHtml = (result.posts || []).length === 0 ? '<div class="post">(Sin posts)</div>' : result.posts.map(renderPost).join('');
+      return '<div class="user">' + header + postsHtml + '</div>';
+    };
+
+    // Lógica async/await en estilo funcional (map + Promise.all)
+    document.addEventListener('DOMContentLoaded', () => {
+      (async function loadAll() {
+        try {
+          const resp = await fetch('https://jsonplaceholder.typicode.com/users');
+          if (!resp.ok) throw new Error(resp.statusText);
+          const users = await resp.json();
+
+          // ordenar
+          users.sort((a,b) => a.id - b.id);
+
+          // obtener para cada usuario sus posts y para cada post sus comentarios (map + Promise.all)
+          const userPromises = users.map(async user => {
+            try {
+              const r = await fetch('https://jsonplaceholder.typicode.com/users/' + user.id + '/posts');
+              if (!r.ok) throw new Error(r.statusText);
+              const posts = await r.json();
+
+              const postsWithComments = await Promise.all(
+                posts.map(async post => {
+                  try {
+                    const cr = await fetch('https://jsonplaceholder.typicode.com/posts/' + post.id + '/comments');
+                    if (!cr.ok) throw new Error(cr.statusText);
+                    const comments = await cr.json();
+                    return Object.assign({}, post, { comments });
+                  } catch (err) {
+                    callbackError('Error al obtener comentarios del post ' + post.id + ': ' + err.message);
+                    return Object.assign({}, post, { comments: [] });
+                  }
+                })
+              );
+
+              return { user, posts: postsWithComments };
+            } catch (err) {
+              callbackError('Error al obtener posts del usuario ' + user.id + ': ' + err.message);
+              return null;
+            }
+          });
+
+          const results = await Promise.all(userPromises);
+          const validResults = results.filter(r => r !== null);
+
+          if (validResults.length === 0) {
+            document.getElementById('output').innerText = 'No hay datos para mostrar.';
+            return;
+          }
+
+          const html = validResults.map(renderUser).join('');
+          document.getElementById('output').innerHTML = html;
+          console.log('Todos los datos (usuarios, posts y comentarios) procesados correctamente.');
+
+        } catch (err) {
+          callbackError('Error general: ' + err.message);
+          document.getElementById('output').innerText = 'Error al cargar datos.';
+        }
+      })();
+    });
+  </script>
+</body>
+</html>
