@@ -24,7 +24,6 @@
             var b2 = $.Deferred();
             var b3 = $.Deferred();
 
-
             $("#boton1a").click(function () {
                 alert("Has pulsado el botón 1 aceptar");
                 b1.resolve();
@@ -32,6 +31,7 @@
                 $("#boton1a").prop("disabled", true);
                 $("#boton1b").prop("disabled", true);
             });
+            
             $("#boton1b").click(function () {
                 alert("Has pulsado el botón 1 rechazar");
                 b1.reject("Rechazado 1 por el botón 1b");
@@ -39,18 +39,25 @@
                 $("#boton1a").prop("disabled", true);
                 $("#boton1b").prop("disabled", true);
             });
+            
             $("#boton2").click(function () {
                 alert("Has pulsado el botón 2");
                 b2.resolve();
             });
+            
             $("#boton3").click(function () {
                 alert("Has pulsado el botón 3");
                 b3.resolve();
             });
-            $.when(b1, b2, b3).done(function () {
-                $("#output").empty().append("<p>Has pulsado todos los botones.</p>");
-            });
 
+            // Usar .then() en lugar de .done()
+            $.when(b1, b2, b3)
+                .then(function () {
+                    $("#output").empty().append("<p>Has pulsado todos los botones.</p>");
+                })
+                .catch(function (error) {
+                    $("#output").empty().append("<p>Error: " + error + "</p>");
+                });
         });
     </script>    
 </body>
