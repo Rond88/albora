@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+
+        //document ready
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Simulación de "descargar" un usuario (con retraso)
+            function obtenerUsuario(id) {
+                return new Promise((resolve) => {
+                    const tiempo = Math.floor(Math.random() * 8000) + 1000; // entre 1 y 3 segundos
+                    setTimeout(() => {
+                        resolve({ id, nombre: `Usuario${id}` });
+                        console.log(`Usuario ${id} obtenido en ${tiempo} ms`);
+                    }, tiempo);
+                });
+            }
+
+            // Llamadas en paralelo
+            const promesas = [
+                obtenerUsuario(1),
+                obtenerUsuario(2),
+                obtenerUsuario(3),
+                obtenerUsuario(4),
+                obtenerUsuario(5)
+            ];
+
+
+            console.log("Ya se han pedido los usuarios. Esperando a que lleguen...");
+
+            // Ejecutamos todas al mismo tiempo con Promise.all
+            Promise.all(promesas)
+                .then(usuarios => {
+                    console.log("Todos los usuarios fueron obtenidos:");
+                    // Mostrar los usuarios por orden
+                    usuarios.sort((a, b) => a.id - b.id);
+                    usuarios.forEach(usuario => {
+                        console.log(`ID: ${usuario.id}, Nombre: ${usuario.nombre}`);
+                    });                    
+                })
+                .catch(error => {
+                    console.error("Hubo un error al obtener los usuarios:", error);
+                });
+        });
+
+    </script>
+</body>
+
+</html>

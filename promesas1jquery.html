@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a promesas con jQuery</title>
+</head>
+
+<body>
+    <h1>Introducción a promesas con jQuery</h1>
+    <button id="boton1a">Boton 1 aceptar</button>
+    <button id="boton1b">Boton 1 rechazar</button>
+    <button id="boton2">Boton 2</button>
+    <button id="boton3">Boton 3</button>    
+    <div id="output"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // espera a que el DOM esté listo
+        $(document).ready(function () {
+            $("#output").append("<p>No has pulsado todos los botones.</p>");
+
+            var b1 = $.Deferred();
+            var b2 = $.Deferred();
+            var b3 = $.Deferred();
+
+
+            $("#boton1a").click(function () {
+                alert("Has pulsado el botón 1 aceptar");
+                b1.resolve();
+                // deshabilitar los botones 1a y 1b
+                $("#boton1a").prop("disabled", true);
+                $("#boton1b").prop("disabled", true);
+            });
+            $("#boton1b").click(function () {
+                alert("Has pulsado el botón 1 rechazar");
+                b1.reject("Rechazado 1 por el botón 1b");
+                // deshabilitar los botones 1a y 1b
+                $("#boton1a").prop("disabled", true);
+                $("#boton1b").prop("disabled", true);
+            });
+            $("#boton2").click(function () {
+                alert("Has pulsado el botón 2");
+                b2.resolve();
+            });
+            $("#boton3").click(function () {
+                alert("Has pulsado el botón 3");
+                b3.resolve();
+            });
+            $.when(b1, b2, b3).done(function () {
+                $("#output").empty().append("<p>Has pulsado todos los botones.</p>");
+            });
+
+        });
+    </script>    
+</body>
+
+</html>
